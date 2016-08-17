@@ -1,0 +1,16 @@
+---
+- name: create ansible tower vagrant directory
+  file: path=/root/ansible_tower_vm state=directory
+
+- name: make sure vagrant is installed
+  yum: name=https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1_x86_64.rpm state=present
+
+- name: install dependencies
+  yum: name={{ item }} state=present
+  with_items:
+   - libvirt-devel
+   - libxslt-devel
+   - libxml2-devel
+   - qemu-img
+   - gcc
+   - rsync

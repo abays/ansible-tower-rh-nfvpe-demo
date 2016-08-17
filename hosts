@@ -1,0 +1,4 @@
+[vm-host]
+localhost
+
+[ansible-tower]

@@ -1,0 +1,8 @@
+---
+- name: copy vagrant file
+  template: src=Vagrantfile.j2 dest=/root/ansible_tower_vm/Vagrantfile
+
+- name: spin up the vagrant vm
+  shell: >
+    cd /root/ansible_tower_vm;
+    vagrant up

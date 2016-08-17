@@ -1,0 +1,7 @@
+---
+- name: create VM
+  hosts: vm-host
+  connection: local
+
+  roles:
+    - create-vm

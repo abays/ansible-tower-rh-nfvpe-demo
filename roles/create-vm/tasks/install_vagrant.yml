@@ -1,0 +1,6 @@
+---
+ - name: install vagrant
+   yum: name=vagrant state=present
+
+ - name: install vagrant libvirt plugin
+   command: vagrant plugin install vagrant-libvirt
