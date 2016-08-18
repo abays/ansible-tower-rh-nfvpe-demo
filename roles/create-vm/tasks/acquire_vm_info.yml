@@ -1,0 +1,21 @@
+---
+- name: get vm ip
+  shell: >
+    cd /root/ansible_tower_vm;
+    vagrant ssh -c "ip address show eth0 | grep 'inet ' | sed -e 's/^.*inet //' -e 's/\/.*$//'"
+  register: vm_ip
+
+- name: get private key for vagrant vm
+  shell: >
+    cd /root/ansible_tower_vm;
+    vagrant ssh-config | grep IdentityFile | awk '{print $2}' | cut -d "\"" -f 2
+  register: vm_key
+
+- name: add vm to ansible-tower host group
+  add_host:
+    name: ansible_tower
+    groups: ansible-tower
+    ansible_host: "{{ vm_ip.stdout_lines[0] }}"
+    ansible_user: vagrant 
+    ansible_ssh_private_key_file: "{{ vm_key.stdout }}"
+    ansible_become: true

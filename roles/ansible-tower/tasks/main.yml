@@ -1,0 +1,38 @@
+---
+- name: install epel repo
+  yum: name=epel-release state=present
+
+- name: install dependencies
+  yum: name={{ item }} state=present
+  with_items:
+   - wget
+   - python-pip
+
+- name: download ansible tower
+  command: wget http://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-2.4.5.tar.gz
+
+- name: extract ansible tower
+  command: tar -xvf ansible-tower-setup-2.4.5.tar.gz
+
+- name: configure ansible tower
+  shell: >
+    cd ansible-tower-setup-2.4.5;
+    ./configure
+
+- name: set up ansible tower
+  shell: >
+    cd ansible-tower-setup-2.4.5;
+    ./setup.sh
+
+- name: generate ssh key
+  command: ssh-keygen -t rsa -b 4096 -C "root@vagrant.vm"
+
+- name: install ansible tower cli
+  command: pip install ansible-tower-cli
+
+- name: set ansible tower cli config
+  shell: >
+    tower-cli config host localhost;
+    tower-cli config username admin;
+    tower-cli config password admin;
+    tower-cli config verify_ssl false

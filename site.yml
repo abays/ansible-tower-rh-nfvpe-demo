@@ -5,3 +5,10 @@
 
   roles:
     - create-vm
+
+- name: configure VM
+  hosts: ansible-tower
+  remote_user: vagrant 
+
+  roles:
+    - ansible-tower
