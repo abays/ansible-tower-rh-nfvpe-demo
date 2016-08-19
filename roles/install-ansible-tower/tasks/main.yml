@@ -14,11 +14,6 @@
 - name: extract ansible tower
   command: tar -xvf ansible-tower-setup-3.0.0.tar.gz
 
-#- name: configure ansible tower
-#  shell: >
-#    cd ansible-tower-setup-3.0.0;
-#    ./configure
-
 - name: configure ansible tower
   shell: >
     cd ansible-tower-setup-3.0.0;

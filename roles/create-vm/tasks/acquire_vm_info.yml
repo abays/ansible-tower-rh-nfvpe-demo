@@ -5,19 +5,6 @@
     vagrant ssh -c "ip address show eth0 | grep 'inet ' | sed -e 's/^.*inet //' -e 's/\/.*$//'"
   register: vm_ip
 
-#- name: get private key for vagrant vm
-#  shell: >
-#    cd /root/ansible_tower_vm;
-#    vagrant ssh-config | grep IdentityFile | awk '{print $2}' | cut -d "\"" -f 2
-#  register: vm_key
-
-#- name: get key contents
-#  shell: cat {{ vm_key.stdout }}
-#  register: vm_key_content
-
-#- name: write out key, temporarily
-#  local_action: copy content={{ vm_key_content.stdout }} dest=/tmp/ansible_tower_vm.pem
-
 - name: allow password auth for ssh
   shell: >
     cd /root/ansible_tower_vm;
