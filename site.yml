@@ -1,7 +1,7 @@
 ---
 - name: create VM
   hosts: vm-host
-  connection: local
+  remote_user: root
 
   roles:
     - create-vm
@@ -11,4 +11,4 @@
   remote_user: vagrant 
 
   roles:
-    - ansible-tower
+    - install-ansible-tower

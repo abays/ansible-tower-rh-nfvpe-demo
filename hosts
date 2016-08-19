@@ -1,4 +1,4 @@
 [vm-host]
-localhost
+10.8.125.12
 
 [ansible-tower]
