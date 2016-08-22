@@ -1,3 +1,7 @@
 ---
 vm_host_ip: "{{ hostvars[groups['vm-host'][0]]['ansible_default_ipv4']['address'] }}"
 ansible_ssh_common_args: '-o ProxyCommand="ssh -v -W %h:%p -q root@{{ vm_host_ip }}" -o StrictHostKeyChecking=no'
+aws_access_key: CHANGE_ME
+aws_secret_key: CHANGE_ME
+os_auth_url: CHANGE_ME
+os_admin_password: CHANGE_ME
