@@ -31,6 +31,6 @@ As seen in the example above, you can set these variables at the command line.  
 
 Simple steps to connect to the Tower UI from your local machine (change ports if needed):
 
-1. ssh <whoever>@<vm-host-ip> -L localhost:8084:localhost:8084
-2. ssh vagrant@<vm-ip> -L localhost:8084:localhost:443     (password is vagrant)
+1. ssh `<whoever>`@`<vm-host-ip>` -L localhost:8084:localhost:8084
+2. ssh vagrant@`<vm-ip>` -L localhost:8084:localhost:443     (password is vagrant)
 3. Hit https://localhost:8084 in your browser
