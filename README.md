@@ -1,6 +1,12 @@
 # ansible-tower-rh-nfvpe-demo
 Installs an Ansible Tower VM and configures it for Red Hat's OPNFV Summit 2016 Demo
 
+##Prerequisites
+
+1. A TripleO OpenStack cloud is deployed and configured.
+2. Jumpserver (VM host) has access to overcloud network.
+3. You understand that this is not a generic Ansible Tower installer (in fact, Ansible Tower already uses Ansible to install itself!).  This repo is designed to work with the configuration repo found here for the Red Hat OPNFV Summit 2016 demo: https://github.com/atyronesmith/OPNFV-demo-ansible.  It also assumes you are using NFV-related templates found here: https://github.com/Ladas/OPNFV-Summit-16-demo/tree/master/templates.  The "os_private_key_file" argument listed in the "Arguments" section below needs to be the same key that is referenced in the demo VNFD template, and the "aws_private_key_file" argument needs to correspond to AWS key set in the demo NSD template.
+
 ##Example Execution
 
 ansible-playbook -i hosts site.yml -e aws_private_key_file=/home/abays/xxxxxx.pem -e aws_access_key=xxxxxx -e aws_secret_key=xxxxxx -e os_admin_password=xxxxxx -e os_private_key_file=xxxxxx -e os_auth_url=http://172.16.2.5:5000 -e vm_overcloud_bridge=xxxxxx -e vm_overcloud_ip=xxxxxx -e use_ansible_source=xxxxxx
