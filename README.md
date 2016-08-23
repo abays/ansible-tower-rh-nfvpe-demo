@@ -34,3 +34,4 @@ Simple steps to connect to the Tower UI from your local machine (change ports if
 1. ssh `<whoever>`@`<vm-host-ip>` -L localhost:8084:localhost:8084
 2. ssh vagrant@`<vm-ip>` -L localhost:8084:localhost:443     (password is vagrant)
 3. Hit https://localhost:8084 in your browser
+4. Log in with admin//admin
