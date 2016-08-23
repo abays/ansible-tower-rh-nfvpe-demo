@@ -7,13 +7,45 @@
   with_items:
    - wget
    - python-pip
+   - libffi-devel
+   - gcc
+   - python-devel
+   - openssl-devel
+   - git
 
 - name: install python pexpect
   command: pip install pexpect
 
+- name: install ansible dependencies, if necessary
+  command: pip install {{ item }}
+  with_items:
+   - paramiko
+   - PyYAML
+   - Jinja2
+   - httplib2
+   - six
+  when: ({{ use_ansible_source }} == true)
+
+- name: clone ansible source, if requested
+  git: repo=https://github.com/ansible/ansible.git dest=/root/ansible
+  when: ({{ use_ansible_source }} == true)
+
+- name: update github ansible submodules, if requested
+  shell: >
+    cd /root/ansible;
+    git submodule update --init --recursive
+  when: ({{ use_ansible_source }} == true)
+
+- name: pre-install ansible from source, if requested
+  shell: >
+    cd /root/ansible;
+    make install
+  when: ({{ use_ansible_source }} == true)
+
 - name: check if ansible tower is already installed and running
   shell: ps ax | grep -v "grep" | grep "tower-manage run_socketio_service"
   register: ansible_tower_present
+  failed_when: (ansible_tower_present.stderr != "")
 
 - name: download ansible tower (if necessary)
   command: wget http://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-3.0.0.tar.gz
