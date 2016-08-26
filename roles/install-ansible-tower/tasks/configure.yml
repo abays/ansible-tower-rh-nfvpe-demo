@@ -1,0 +1,52 @@
+---
+- name: copy AWS private key to VM
+  copy: src="{{ aws_private_key_file }}" dest=/root/aws.pem
+  when: aws_private_key_file is defined 
+
+- name: copy OS private key to VM
+  copy: src="{{ os_private_key_file }}" dest=/root/os.pem
+
+- name: add credential for AWS API
+  command: tower-cli credential create --name AWS-DEMO-API --description "AWS API Credentials" --kind aws --username {{ aws_access_key }} --password {{ aws_secret_key }} --organization Default
+  when: (aws_access_key is defined and aws_secret_key is defined)
+
+- name: add credential for AWS key pair
+  command: tower-cli credential create --name AWS-DEMO-KEY-PAIR --description "AWS SSH key pair" --kind ssh --username opnfv --password "" --ssh-key-data /root/aws.pem --organization Default
+  when: aws_private_key_file is defined
+
+- name: add credential for OpenStack API
+  command: tower-cli credential create --name OS-DEMO-LOGIN --description "OS Login" --kind openstack --host {{ os_auth_url }}  --username admin --password {{ os_admin_password }} --organization Default --project admin
+
+- name: add credential for OpenStack key pair
+  command: tower-cli credential create --name OS-DEMO-KEY-PAIR --description "SSH key pair" --kind ssh --username opnfv --password "" --ssh-key-data /root/os.pem --organization Default
+
+- name: create demo project
+  command: tower-cli project create --name "OPNFV-demo" --description "Project for OPNFV Summit 2016 ManageIQ demo" --scm-type git --scm-url "https://github.com/atyronesmith/OPNFV-demo-ansible.git" --scm-clean true --scm-delete-on-update true --scm-update-on-launch true
+
+- name: create AWS inventory
+  command: tower-cli inventory create --name "AWS-DEMO" --description "Inventory of AWS Demo instances" --organization Default
+  when: aws_private_key_file is defined
+
+- name: create AWS inventory group
+  command: tower-cli group create --name "AWS-DEMO-GROUP" --inventory "AWS-DEMO" --credential "AWS-DEMO-API" --source ec2
+  when: aws_private_key_file is defined
+
+- name: create OpenStack inventory
+  command: tower-cli inventory create --name "OS-DEMO-INVENTORY" --description "Inventory of OpenStack instances" --organization Default
+
+- name: create OpenStack inventory group
+  command: tower-cli group create --name "OS-DEMO-GROUP" --inventory "OS-DEMO-INVENTORY" --credential "OS-DEMO-LOGIN" --source openstack
+
+- name: create OpenStack (client) job template
+  command: tower-cli job_template create --name OPNFV-demo-client --description "All clients tasks" --job-type run --inventory "OS-DEMO-INVENTORY" --project "OPNFV-demo" --playbook cr-vpn-clients.yml --machine-credential "OS-DEMO-KEY-PAIR"
+
+- name: create AWS (server) job template
+  command: tower-cli job_template create --name OPNFV-demo-server --description "All server tasks" --job-type run --inventory "AWS-DEMO" --project "OPNFV-demo" --playbook cr-vpn-servers.yml --machine-credential "AWS-DEMO-KEY-PAIR"
+  when: aws_private_key_file is defined
+
+- name: remove AWS key from VM file system
+  file: name=/root/aws.pem state=absent
+  when: aws_private_key_file is defined
+
+- name: remove OS key from VM file system
+  file: name=/root/os.pem state=absent

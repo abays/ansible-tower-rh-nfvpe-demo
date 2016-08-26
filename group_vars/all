@@ -1,5 +1,5 @@
 ---
-aws_private_key_file: CHANGE_ME
-os_private_key_file: CHANGE_ME
-vm_overcloud_bridge: CHANGE_ME
-vm_overcloud_ip: CHANGE_ME
+#aws_private_key_file: 
+#os_private_key_file: 
+#vm_overcloud_bridge: 
+#vm_overcloud_ip: 
