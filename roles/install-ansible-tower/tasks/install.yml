@@ -48,24 +48,33 @@
   failed_when: (ansible_tower_present.stderr != "")
 
 - name: download ansible tower (if necessary)
-  command: wget http://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-3.0.0.tar.gz
+  command: wget http://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-{{ tower_version }}.tar.gz
   when: (ansible_tower_present.stdout == '')
 
 - name: extract ansible tower
-  command: tar -xvf ansible-tower-setup-3.0.0.tar.gz
+  command: tar -xvf ansible-tower-setup-{{ tower_version }}.tar.gz
   when: (ansible_tower_present.stdout == '')
 
 - name: configure ansible tower
   shell: >
-    cd ansible-tower-setup-3.0.0;
+    cd ansible-tower-setup-{{ tower_version }};
     sed -i "s/admin_password=''/admin_password='admin'/g" inventory;
     sed -i "s/redis_password=''/redis_password='admin'/g" inventory;
     sed -i "s/pg_password=''/pg_password='awx'/g" inventory
-  when: (ansible_tower_present.stdout == '')
+  when: (ansible_tower_present.stdout == '' and "{{ tower_version }}" == "3.0.0")
+
+- name: create config option file (if necessary)
+  template: src=config_options.yml.j2 dest=/home/vagrant/ansible-tower-setup-{{ tower_version }}/tower_setup_conf.yml owner=vagrant group=vagrant 
+
+- name: run configure ansible tower script (if necessary)
+  shell: >
+    cd ansible-tower-setup-{{ tower_version }};
+    ./configure -o config_options.yml
+  when: ("{{ tower_version }}" == "2.4.5")
 
 - name: set up ansible tower
   shell: >
-    cd ansible-tower-setup-3.0.0;
+    cd ansible-tower-setup-{{ tower_version }};
     ./setup.sh
   when: (ansible_tower_present.stdout == '')
 

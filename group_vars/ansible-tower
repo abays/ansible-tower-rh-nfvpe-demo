@@ -1,4 +1,5 @@
 ---
+tower_version: 2.4.5
 use_ansible_source: false
 skip_demo_config: false
 vm_host_ip: "{{ hostvars[groups['vm-host'][0]]['ansible_default_ipv4']['address'] }}"

@@ -16,9 +16,19 @@
 
 - name: add credential for OpenStack API
   command: tower-cli credential create --name OS-DEMO-LOGIN --description "OS Login" --kind openstack --host {{ os_auth_url }}  --username admin --password {{ os_admin_password }} --organization Default --project admin
+  when: ("{{ tower_version }}" == "3.0.0")
+
+- name: add credential for OpenStack API
+  command: tower-cli credential create --name OS-DEMO-LOGIN --description "OS Login" --kind openstack --host {{ os_auth_url }}  --username admin --password {{ os_admin_password }} --project admin
+  when: ("{{ tower_version }}" != "3.0.0")
 
 - name: add credential for OpenStack key pair
   command: tower-cli credential create --name OS-DEMO-KEY-PAIR --description "SSH key pair" --kind ssh --username opnfv --password "" --ssh-key-data /root/os.pem --organization Default
+  when: ("{{ tower_version }}" == "3.0.0")
+
+- name: add credential for OpenStack key pair
+  command: tower-cli credential create --name OS-DEMO-KEY-PAIR --description "SSH key pair" --kind ssh --username opnfv --password "" --ssh-key-data /root/os.pem
+  when: ("{{ tower_version }}" != "3.0.0")
 
 - name: create demo project
   command: tower-cli project create --name "OPNFV-demo" --description "Project for OPNFV Summit 2016 ManageIQ demo" --scm-type git --scm-url "https://github.com/atyronesmith/OPNFV-demo-ansible.git" --scm-clean true --scm-delete-on-update true --scm-update-on-launch true
